@@ -1,0 +1,47 @@
+{
+    "nama_index": "INDEX FOTO JPG",
+    "versi": "1.1",
+    "jumlah_foto": 5,
+    "folder_sumber": "SURFACE KOTA LINTANG DAN SEKITARNYA",
+    "format": [
+        "JPG",
+        "JPEG"
+    ],
+    "daftar_foto": [
+        {
+            "nomor": 1,
+            "nama_file": "ATAS.jpg",
+            "lokasi_relatif": "ATAS.jpg",
+            "ekstensi": ".jpg",
+            "ukuran_byte": 269918
+        },
+        {
+            "nomor": 2,
+            "nama_file": "BARAT.jpg",
+            "lokasi_relatif": "BARAT.jpg",
+            "ekstensi": ".jpg",
+            "ukuran_byte": 333353
+        },
+        {
+            "nomor": 3,
+            "nama_file": "SELATAN.jpg",
+            "lokasi_relatif": "SELATAN.jpg",
+            "ekstensi": ".jpg",
+            "ukuran_byte": 147449
+        },
+        {
+            "nomor": 4,
+            "nama_file": "TIMUR.jpg",
+            "lokasi_relatif": "TIMUR.jpg",
+            "ekstensi": ".jpg",
+            "ukuran_byte": 445378
+        },
+        {
+            "nomor": 5,
+            "nama_file": "UTARA.jpg",
+            "lokasi_relatif": "UTARA.jpg",
+            "ekstensi": ".jpg",
+            "ukuran_byte": 332148
+        }
+    ]
+}
