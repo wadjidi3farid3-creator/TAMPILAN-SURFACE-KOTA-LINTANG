@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Surface Viewer</title>
+
+<style>
+:root {
+    --bg: #101820;
+    --panel: #192630;
+    --panel2: #223440;
+    --text: #e8f0f4;
+    --muted: #a9bbc5;
+    --accent: #36c28b;
+    --border: #354b58;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+}
+
+header {
+    padding: 15px 20px;
+    background: #17242d;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+header p {
+    color: var(--muted);
+    margin: 6px 0 0;
+    font-size: 12px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px;
+    max-width: 1600px;
+    margin: auto;
+}
+
+.sidebar, .viewer, .info {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.sidebar {
+    padding: 12px;
+}
+
+.sidebar h3 {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 4px 0 12px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.menu button {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.menu button.active {
+    border-color: var(--accent);
+    background: #174735;
+}
+
+.main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.viewer {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    height: min(68vh, 720px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #080d11;
+    touch-action: pan-y;
+}
+
+#foto {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+    user-select: none;
+    -webkit-user-drag: none;
+    cursor: grab;
+}
+
+#foto:active { cursor: grabbing; }
+
+.status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+    pointer-events: none;
+}
+
+.toolbar {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    z-index: 3;
+}
+
+.toolbar button, .nav button {
+    background: rgba(25,38,48,.94);
+    color: white;
+    border: 1px solid #647783;
+    border-radius: 6px;
+    padding: 8px 11px;
+    cursor: pointer;
+}
+
+.toolbar button:hover, .nav button:hover {
+    background: #315344;
+}
+
+.nav {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.nav button { pointer-events: auto; }
+
+.info {
+    padding: 14px;
+}
+
+.info h2 {
+    margin: 0 0 7px;
+    font-size: 17px;
+}
+
+.info p {
+    margin: 5px 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.counter {
+    color: var(--accent) !important;
+    font-weight: bold;
+}
+
+@media(max-width: 700px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .menu {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .menu button {
+        text-align: center;
+        padding: 10px 5px;
+    }
+
+    .viewer {
+        height: 58vh;
+        min-height: 260px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1 id="judul">SURFACE VIEWER</h1>
+    <p id="subjudul">Visualisasi foto permukaan</p>
+</header>
+
+<div class="container">
+
+    <aside class="sidebar">
+        <h3>ARAH PENGAMATAN</h3>
+        <div class="menu" id="menu"></div>
+    </aside>
+
+    <main class="main">
+
+        <section class="viewer" id="viewer">
+
+            <div class="status" id="status">
+                Memuat data viewer...
+            </div>
+
+            <img id="foto" alt="Foto surface" hidden>
+
+            <div class="toolbar">
+                <button onclick="zoomIn()">+</button>
+                <button onclick="zoomOut()">−</button>
+                <button onclick="resetZoom()">Reset</button>
+                <button onclick="fullscreen()">Layar penuh</button>
+                <button onclick="downloadFoto()">Unduh</button>
+            </div>
+
+            <div class="nav">
+                <button onclick="pindah(-1)">‹</button>
+                <button onclick="pindah(1)">›</button>
+            </div>
+
+        </section>
+
+        <section class="info">
+            <h2 id="namaFoto">-</h2>
+            <p id="deskripsi">-</p>
+            <p id="detail"></p>
+            <p class="counter" id="counter"></p>
+        </section>
+
+    </main>
+</div>
+
+<!-- DATA DITANAMKAN SAAT GENERATE. TIDAK MENGGUNAKAN FETCH. -->
+<script type="application/json" id="surface-data">
+{"versi":"2.1","nama_proyek":"SURFACE KOTA LINTANG DAN SEKITARNYA","waktu_generate":"2026-11-19T17:02:41+07:00","jumlah_foto":5,"daftar_foto":[{"id":"FOTO_0001","nama":"ATAS.jpg","arah":"ATAS","file":"ATAS.jpg","format":".jpg","ukuran_byte":269918,"ukuran_format":"263.59 KB","lebar":400,"tinggi":700,"deskripsi":"Tampilan permukaan dari arah atas.","sha256":"a9cf88b6da04e13cd4240425f5bc6b3c45990539cb8cf50aedbb287fe6d08e16"},{"id":"FOTO_0002","nama":"UTARA.jpg","arah":"UTARA","file":"UTARA.jpg","format":".jpg","ukuran_byte":332148,"ukuran_format":"324.36 KB","lebar":600,"tinggi":600,"deskripsi":"Tampilan permukaan dari arah utara.","sha256":"f353322953406175693bf4559cc03a5a02c9e76ae75873921865eab57b983a03"},{"id":"FOTO_0003","nama":"SELATAN.jpg","arah":"SELATAN","file":"SELATAN.jpg","format":".jpg","ukuran_byte":147449,"ukuran_format":"143.99 KB","lebar":600,"tinggi":587,"deskripsi":"Tampilan permukaan dari arah selatan.","sha256":"a560f3c7aa354bec60476f441ba0cf3bfa369528a0e8afcee06a37bcb1b0b52b"},{"id":"FOTO_0004","nama":"TIMUR.jpg","arah":"TIMUR","file":"TIMUR.jpg","format":".jpg","ukuran_byte":445378,"ukuran_format":"434.94 KB","lebar":1000,"tinggi":500,"deskripsi":"Tampilan permukaan dari arah timur.","sha256":"c1f6d90ee1e10bc47169966d376b2685f3d5330f6377745bd62be209d9d92fc6"},{"id":"FOTO_0005","nama":"BARAT.jpg","arah":"BARAT","file":"BARAT.jpg","format":".jpg","ukuran_byte":333353,"ukuran_format":"325.54 KB","lebar":900,"tinggi":500,"deskripsi":"Tampilan permukaan dari arah barat.","sha256":"fe84327b2428416e5007f8143cc67c79a9176f92f1d80e7b3f1eb82da93d68c4"}]}
+</script>
+
+<script>
+"use strict";
+
+const DATA = JSON.parse(
+    document.getElementById("surface-data").textContent
+);
+
+const fotoList = DATA.daftar_foto || [];
+let indexAktif = 0;
+let skala = 1;
+let geserX = 0;
+let geserY = 0;
+let dragAktif = false;
+let awalX = 0;
+let awalY = 0;
+let awalGeserX = 0;
+let awalGeserY = 0;
+let sentuhanAwalX = 0;
+
+const img = document.getElementById("foto");
+const viewer = document.getElementById("viewer");
+const statusBox = document.getElementById("status");
+
+function pathFoto(file) {
+    return "FOTO/" + file.split("/").map(
+        bagian => encodeURIComponent(bagian)
+    ).join("/");
+}
+
+function tampilkanStatus(pesan) {
+    statusBox.textContent = pesan;
+    statusBox.style.display = "flex";
+    img.hidden = true;
+}
+
+function sembunyikanStatus() {
+    statusBox.style.display = "none";
+    img.hidden = false;
+}
+
+function bangunMenu() {
+    const menu = document.getElementById("menu");
+    menu.innerHTML = "";
+
+    fotoList.forEach((item, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = item.arah || item.nama;
+        btn.addEventListener("click", () => tampilkanFoto(i));
+        btn.id = "menu-" + i;
+        menu.appendChild(btn);
+    });
+}
+
+function perbaruiTampilan() {
+    document.querySelectorAll(".menu button").forEach(
+        (b, i) => b.classList.toggle("active", i === indexAktif)
+    );
+
+    const item = fotoList[indexAktif];
+
+    document.getElementById("namaFoto").textContent =
+        item.nama || "-";
+
+    document.getElementById("deskripsi").textContent =
+        item.deskripsi || "";
+
+    document.getElementById("detail").textContent =
+        "Ukuran: " + (item.ukuran_format || "-") +
+        " | Resolusi: " + (item.lebar || "?") +
+        " × " + (item.tinggi || "?") + " px";
+
+    document.getElementById("counter").textContent =
+        (indexAktif + 1) + " / " + fotoList.length;
+}
+
+function tampilkanFoto(i) {
+    if (!fotoList.length) return;
+
+    indexAktif = (i + fotoList.length) % fotoList.length;
+    resetZoom();
+
+    const item = fotoList[indexAktif];
+
+    tampilkanStatus("Memuat foto: " + item.nama);
+
+    img.onload = function() {
+        sembunyikanStatus();
+    };
+
+    img.onerror = function() {
+        tampilkanStatus(
+            "GAGAL MEMUAT FOTO\n\n" +
+            "Nama: " + item.nama + "\n" +
+            "Lokasi: " + pathFoto(item.file) +
+            "\n\nPeriksa keberadaan file dan nama folder."
+        );
+    };
+
+    img.src = pathFoto(item.file);
+    perbaruiTampilan();
+}
+
+function pindah(delta) {
+    tampilkanFoto(indexAktif + delta);
+}
+
+function terapkanTransformasi() {
+    img.style.transform =
+        "translate(" + geserX + "px," + geserY +
+        "px) scale(" + skala + ")";
+}
+
+function zoomIn() {
+    skala = Math.min(5, skala + 0.25);
+    terapkanTransformasi();
+}
+
+function zoomOut() {
+    skala = Math.max(1, skala - 0.25);
+    if (skala === 1) {
+        geserX = 0;
+        geserY = 0;
+    }
+    terapkanTransformasi();
+}
+
+function resetZoom() {
+    skala = 1;
+    geserX = 0;
+    geserY = 0;
+    terapkanTransformasi();
+}
+
+function fullscreen() {
+    if (!document.fullscreenElement) {
+        viewer.requestFullscreen?.();
+    } else {
+        document.exitFullscreen?.();
+    }
+}
+
+function downloadFoto() {
+    if (!fotoList.length) return;
+
+    const item = fotoList[indexAktif];
+    const a = document.createElement("a");
+
+    a.href = pathFoto(item.file);
+    a.download = item.nama;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+img.addEventListener("pointerdown", function(e) {
+    if (skala <= 1) return;
+
+    dragAktif = true;
+    awalX = e.clientX;
+    awalY = e.clientY;
+    awalGeserX = geserX;
+    awalGeserY = geserY;
+
+    img.setPointerCapture?.(e.pointerId);
+});
+
+img.addEventListener("pointermove", function(e) {
+    if (!dragAktif) return;
+
+    geserX = awalGeserX + e.clientX - awalX;
+    geserY = awalGeserY + e.clientY - awalY;
+
+    terapkanTransformasi();
+});
+
+img.addEventListener("pointerup", function() {
+    dragAktif = false;
+});
+
+img.addEventListener("pointercancel", function() {
+    dragAktif = false;
+});
+
+viewer.addEventListener("touchstart", function(e) {
+    if (e.touches.length === 1 && skala === 1) {
+        sentuhanAwalX = e.touches[0].clientX;
+    }
+}, {passive: true});
+
+viewer.addEventListener("touchend", function(e) {
+    if (skala !== 1 || !e.changedTouches.length) return;
+
+    const akhirX = e.changedTouches[0].clientX;
+    const selisih = akhirX - sentuhanAwalX;
+
+    if (Math.abs(selisih) > 70) {
+        pindah(selisih < 0 ? 1 : -1);
+    }
+}, {passive: true});
+
+document.addEventListener("keydown", function(e) {
+    if (e.key === "ArrowRight") pindah(1);
+    if (e.key === "ArrowLeft") pindah(-1);
+    if (e.key === "+" || e.key === "=") zoomIn();
+    if (e.key === "-") zoomOut();
+    if (e.key === "0") resetZoom();
+});
+
+document.getElementById("judul").textContent =
+    DATA.nama_proyek || "SURFACE VIEWER";
+
+document.getElementById("subjudul").textContent =
+    "Jumlah foto: " + fotoList.length;
+
+if (!fotoList.length) {
+    tampilkanStatus("Tidak ada foto dalam index.json.");
+} else {
+    bangunMenu();
+    tampilkanFoto(0);
+}
+</script>
+
+</body>
+</html>

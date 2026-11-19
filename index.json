@@ -1,0 +1,73 @@
+{
+  "versi": "2.1",
+  "nama_proyek": "SURFACE KOTA LINTANG DAN SEKITARNYA",
+  "waktu_generate": "2026-11-19T17:02:41+07:00",
+  "jumlah_foto": 5,
+  "daftar_foto": [
+    {
+      "id": "FOTO_0001",
+      "nama": "ATAS.jpg",
+      "arah": "ATAS",
+      "file": "ATAS.jpg",
+      "format": ".jpg",
+      "ukuran_byte": 269918,
+      "ukuran_format": "263.59 KB",
+      "lebar": 400,
+      "tinggi": 700,
+      "deskripsi": "Tampilan permukaan dari arah atas.",
+      "sha256": "a9cf88b6da04e13cd4240425f5bc6b3c45990539cb8cf50aedbb287fe6d08e16"
+    },
+    {
+      "id": "FOTO_0002",
+      "nama": "UTARA.jpg",
+      "arah": "UTARA",
+      "file": "UTARA.jpg",
+      "format": ".jpg",
+      "ukuran_byte": 332148,
+      "ukuran_format": "324.36 KB",
+      "lebar": 600,
+      "tinggi": 600,
+      "deskripsi": "Tampilan permukaan dari arah utara.",
+      "sha256": "f353322953406175693bf4559cc03a5a02c9e76ae75873921865eab57b983a03"
+    },
+    {
+      "id": "FOTO_0003",
+      "nama": "SELATAN.jpg",
+      "arah": "SELATAN",
+      "file": "SELATAN.jpg",
+      "format": ".jpg",
+      "ukuran_byte": 147449,
+      "ukuran_format": "143.99 KB",
+      "lebar": 600,
+      "tinggi": 587,
+      "deskripsi": "Tampilan permukaan dari arah selatan.",
+      "sha256": "a560f3c7aa354bec60476f441ba0cf3bfa369528a0e8afcee06a37bcb1b0b52b"
+    },
+    {
+      "id": "FOTO_0004",
+      "nama": "TIMUR.jpg",
+      "arah": "TIMUR",
+      "file": "TIMUR.jpg",
+      "format": ".jpg",
+      "ukuran_byte": 445378,
+      "ukuran_format": "434.94 KB",
+      "lebar": 1000,
+      "tinggi": 500,
+      "deskripsi": "Tampilan permukaan dari arah timur.",
+      "sha256": "c1f6d90ee1e10bc47169966d376b2685f3d5330f6377745bd62be209d9d92fc6"
+    },
+    {
+      "id": "FOTO_0005",
+      "nama": "BARAT.jpg",
+      "arah": "BARAT",
+      "file": "BARAT.jpg",
+      "format": ".jpg",
+      "ukuran_byte": 333353,
+      "ukuran_format": "325.54 KB",
+      "lebar": 900,
+      "tinggi": 500,
+      "deskripsi": "Tampilan permukaan dari arah barat.",
+      "sha256": "fe84327b2428416e5007f8143cc67c79a9176f92f1d80e7b3f1eb82da93d68c4"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "nama_produk": "SURFACE VIEWER",
+  "versi_generator": "2.1",
+  "waktu_generate": "2026-11-19T17:02:41+07:00",
+  "nama_proyek": "SURFACE KOTA LINTANG DAN SEKITARNYA",
+  "folder_sumber": "FOTO SURFACE KOTA LINTANG DAN SEKITARNYA",
+  "jumlah_foto_ditemukan": 5,
+  "jumlah_foto_berhasil": 5,
+  "jumlah_foto_gagal": 0,
+  "total_ukuran_byte": 1528246,
+  "total_ukuran_format": "1.46 MB",
+  "validasi": {
+    "index_html_dibuat": true,
+    "index_json_dibuat": true,
+    "metadata_json_dibuat": true,
+    "folder_foto_dibuat": true,
+    "seluruh_foto_berhasil_disalin": true,
+    "mode_local_first": true,
+    "menggunakan_fetch": false
+  },
+  "daftar_kegagalan": []
+}
